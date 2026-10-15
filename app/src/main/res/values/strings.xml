@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vela Bridge</string>
+    <string name="setup_help">Setup:\n1. Install Vela (app.vela).\n2. Install this bridge (wazeSpoof flavor).\n3. In Uber Driver: Account → Settings → Navigation, pick Waze.\n\nTap a test button above: Vela should open with the destination.\n\nSee README.md for details and the other build flavors.</string>
+</resources>

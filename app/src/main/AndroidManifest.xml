@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Package visibility (Android 11+): lets MainActivity check whether
+         Vela / Uber Driver are installed. Not needed for the bridge itself:
+         explicit intents (setPackage) bypass visibility filtering. -->
+    <queries>
+        <package android:name="app.vela" />
+        <package android:name="com.ubercab.driver" />
+    </queries>
+
+    <application
+        android:label="@string/app_name"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:allowBackup="false">
+
+        <!-- Launcher entry: status + self-test buttons. -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.VelaBridge">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- The invisible bridge. Declares the same VIEW filters Google Maps
+             declares for navigation, so navigation intents resolve here. -->
+        <activity
+            android:name=".BridgeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.VelaBridge.Bridge"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:excludeFromRecents="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="google.navigation" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="geo" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="waze" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="www.google.com" android:pathPrefix="/maps" />
+                <data android:scheme="https" android:host="maps.google.com" />
+                <data android:scheme="http" android:host="maps.google.com" />
+            </intent-filter>
+        </activity>
+
+        <!-- Alias matching the classic fully-explicit Maps component name.
+             Only matters for the mapsSpoof flavor, where our package IS
+             com.google.android.apps.maps: an explicit intent aimed at
+             com.google.android.apps.maps/com.google.android.maps.MapsActivity
+             then lands on the bridge. Harmless in the normal flavor. -->
+        <activity-alias
+            android:name="com.google.android.maps.MapsActivity"
+            android:targetActivity=".BridgeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="google.navigation" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="geo" />
+            </intent-filter>
+        </activity-alias>
+
+    </application>
+</manifest>
